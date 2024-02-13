@@ -13,8 +13,7 @@
         INPUT-OUTPUT SECTION.
         FILE-CONTROL.
             SELECT INPUT-FILE
-      *     ASSIGN TO '/home/mark/mysql/scripts/data' 
-            ASSIGN TO './data'
+            ASSIGN TO '/home/mark/mysql/scripts/data'
             ORGANIZATION IS LINE SEQUENTIAL
             ACCESS MODE IS SEQUENTIAL. 
         DATA DIVISION.
@@ -88,12 +87,12 @@
                      SUNIT GTIN COST
             END-UNSTRING.
             MOVE SPACES TO TMP-DATA.
-            STRING  QUANTITY
-                    SPACE
+            STRING QUANTITY DELIMITED BY " "
+                        "," DELIMITED BY " " 
                     SDETAIL DELIMITED BY " "
-                    SPACE
-                    SKU  DELIMITED BY " "
-                    INTO        TMP-DATA
+                        "," DELIMITED BY " "
+                       SKU  DELIMITED BY " "
+                INTO        TMP-DATA
             END-STRING.
 
 <<<<<<< HEAD
