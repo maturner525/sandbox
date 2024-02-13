@@ -87,11 +87,11 @@
                      SUNIT GTIN COST
             END-UNSTRING.
             MOVE SPACES TO TMP-DATA.
-            STRING QUANTITY DELIMITED BY " "
-                        "," DELIMITED BY " " 
+            STRING  QUANTITY DELIMITED BY " "
+                    SPACE
                     SDETAIL DELIMITED BY " "
-                        "," DELIMITED BY " "
-                       SKU  DELIMITED BY " "
+                    SPACE
+                    SKU  DELIMITED BY " "
                 INTO        TMP-DATA
             END-STRING.
 
