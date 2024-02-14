@@ -96,7 +96,7 @@
                     INTO        TMP-DATA
             END-STRING.
 
-            DISPLAY 'DATA = 'TMP-DATA.
+             DISPLAY 'DATA = 'TMP-DATA.
       *     DISPLAY INPUT-RECORD.
       *     DISPLAY SEPARATED.
 
