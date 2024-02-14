@@ -98,6 +98,6 @@
 
             DISPLAY 'DATA = 'TMP-DATA.
       *     DISPLAY INPUT-RECORD.
-      *      DISPLAY SEPARATED.
+      *     DISPLAY SEPARATED.
 
         
