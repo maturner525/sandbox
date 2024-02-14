@@ -40,7 +40,7 @@
         WORKING-STORAGE SECTION.
         01  WS-EOF             PIC X(1)    VALUE 'N'.
 
-        01  TMP-DATA           PIC X(30).
+        01  TMP-DATA           PIC X(60).
 
         01  SEPARATED.
             05 SDATE           PIC X(10).
@@ -75,7 +75,7 @@
                 STOP RUN.
 
         READ-PROCEDURE.
-            MOVE SPACES TO SEPARATED.
+        
             READ INPUT-FILE INTO INPUT-RECORD
                     AT END MOVE 'Y' TO WS-EOF
                 NOT AT END PERFORM DISPLAY-PROCEDURE
@@ -88,16 +88,16 @@
                      SUNIT GTIN COST
             END-UNSTRING.
             MOVE SPACES TO TMP-DATA.
-            STRING  QUANTITY
+            STRING          
+                    ITEM-NAME DELIMITED BY SIZE
                     SPACE
-                    SDETAIL DELIMITED BY " "
+                    QUANTITY
                     SPACE
-                    SKU  DELIMITED BY " "
+                    SDETAIL DELIMITED BY SIZE
+                    SPACE
+                    SKU  DELIMITED BY SIZE
                     INTO        TMP-DATA
             END-STRING.
 
-            DISPLAY 'DATA = 'TMP-DATA.
-      *     DISPLAY INPUT-RECORD.
-      *     DISPLAY SEPARATED.
-
+            DISPLAY TMP-DATA.
         
