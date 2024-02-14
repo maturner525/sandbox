@@ -96,8 +96,14 @@
                     INTO        TMP-DATA
             END-STRING.
 
+<<<<<<< HEAD
              DISPLAY 'DATA = 'TMP-DATA.
       *     DISPLAY INPUT-RECORD.
       *     DISPLAY SEPARATED.
+=======
+            DISPLAY 'DATA = 'TMP-DATA.
+      *     DISPLAY INPUT-RECORD.
+      *      DISPLAY SEPARATED.
+>>>>>>> 2669693 (Initial Load)
 
         
