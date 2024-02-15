@@ -1,6 +1,6 @@
       * Populate Database
         IDENTIFICATION DIVISION.
-         PROGRAM-ID.     popdata.
+         PROGRAM-ID.     POPDATA.
          AUTHOR.         Mark.
          INSTALLATION.   Ubuntu.
          DATE-WRITTEN.   2024-02-10.
@@ -43,25 +43,19 @@
         01  TMP-DATA           PIC X(220).
 
         01  SEPARATED.
-            05 SDATE           PIC X(10).
-            05 WS-DATE REDEFINES SDATE.
-                10 YY      PIC 9(2).
-                10 FILLER  PIC X(1) VALUE '-'.
-                10 MM      PIC 9(3).
-                10 FILLER  PIC X(1) VALUE '-'.
-                10 DD      PIC 9(2).
+            05 SDATE           PIC X(10).           
             05 STIME           PIC X(10).
             05 CATEGORY        PIC X(35).
             05 ITEM-NAME       PIC X(40).
             05 QUANTITY        PIC 9(3).
             05 SDETAIL         PIC X(45).
             05 SKU             PIC X(20).
-            05 DISCOUNT        PIC 9(4).
-            05 PRICE           PIC 9(4).
+            05 DISCOUNT        PIC $*9.99.
+            05 PRICE           PIC $*9.99.
             05 TRANS-ID        PIC X(40).
             05 SUNIT           PIC X(4).
             05 GTIN            PIC X(10).
-            05 COST            PIC 9(4).
+            05 COST            PIC $*9.99.
  
         01  SQL-FIELDS-STR.
             05 FS              PIC X(1) VALUE ','.
@@ -91,6 +85,8 @@
             STRING  ITEM-NAME DELIMITED BY SIZE
                     SPACE
                     QUANTITY
+                    SPACE
+                    PRICE
                     SPACE
                     SDETAIL DELIMITED BY SIZE
                     SPACE
