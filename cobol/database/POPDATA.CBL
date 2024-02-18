@@ -65,8 +65,11 @@
         01 WS-CONV-DISCOUNT       PIC 9(5)V99.
         01 WS-CONV-PRICE          PIC 9(5)V99.
         01 WS-CONV-COST           PIC 9(5)V99.
-        01 WS-SALE-AMT            PIC 9(6)V99.
-        01 WS-TOTAL-SALE          PIC Z9.99.
+        01 WS-ORIG-PRICE          PIC 9(6)V99.
+
+      * SALE AMOUNT NUMERIC ONLY 
+        01 WS-ORIG-PR               PIC ZZ9.99.
+        01 WS-TOTAL-SALE            PIC ZZ9.99.
 
         PROCEDURE DIVISION.
         MAIN-PROCEDURE.
@@ -104,6 +107,8 @@
                     SPACE
                     WS-DISCOUNT
                     SPACE
+                    WS-ORIG-PR
+                    SPACE
                     WS-TOTAL-SALE
                     SPACE
                     WS-ITEM-NAME DELIMITED BY SIZE
@@ -128,13 +133,22 @@
         PROCESS-PROCEDURE.
             MOVE WS-DISCOUNT TO WS-CONV-DISCOUNT.
             MOVE WS-PRICE TO WS-CONV-PRICE.
-            
-            ADD WS-CONV-DISCOUNT TO WS-CONV-PRICE
-                GIVING WS-SALE-AMT.
-            MULTIPLY WS-QUANTITY BY WS-SALE-AMT
-                GIVING WS-SALE-AMT.
 
-            MOVE WS-SALE-AMT TO WS-TOTAL-SALE.
+      * CALCULATE ORIGINAL PRICE BEFORE DISCOUNT          
+            ADD WS-CONV-DISCOUNT TO WS-CONV-PRICE
+                GIVING WS-ORIG-PRICE.
+
+            MOVE WS-ORIG-PRICE TO WS-ORIG-PR.    
+
+      * CALCULATE ACTUAL SALE AMOUNT
+            MULTIPLY WS-QUANTITY BY WS-CONV-PRICE
+                GIVING WS-TOTAL-SALE.          
+            
+
+      *      MOVE WS-SALE-AMT TO WS-ORIG-PRICE.
+    
+
+        
       
        
 
