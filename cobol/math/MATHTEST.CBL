@@ -44,18 +44,17 @@
 
         PROCESS-RECORD.
             UNSTRING WS-INPUT-RECORD DELIMITED BY ','
-                INTO Employee Salary TaxAmount
-            END-UNSTRING
-            DISPLAY 'EMPLOYEE: ' Employee.
-            DISPLAY 'SALARY :' Salary.
-            DISPLAY 'TAXAMOUNT: ' TaxAmount.
-            DISPLAY SPACE.
+                INTO Employee Salary TaxRate
+            END-UNSTRING.
+
             MOVE Salary TO ConvertedSalary.
             MOVE TaxRate TO ConvertedTaxRate.
+
       *     COMPUTE TaxAmount = ConvertedSalary * ConvertedTaxRate.
             MULTIPLY ConvertedSalary BY ConvertedTaxRate 
                 GIVING TaxAmount
                 NOT ON SIZE ERROR
-                    DISPLAY Employee SPACE 
-                        ConvertedSalary SPACE 
-                        TaxAmount.
+                    DISPLAY Employee SPACE
+                            Salary SPACE
+                            TaxAmount.
+      
