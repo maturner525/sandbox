@@ -58,13 +58,14 @@
             05 WS-TRANS-ID        PIC X(40).
             05 WS-SUNIT           PIC X(4).
             05 WS-GTIN            PIC X(10).
-            05 WS-COST            PIC $*9.99.
+            05 WS-COST            PIC $*9.99. 
 
  
         01  WS-SQL-FIELDS-STR.
             05 FS                 PIC X(1) VALUE ','.
 
-        01  WS-TOTAL-COST         PIC $*9.99.
+        01  WS-TOTAL-COST         PIC X(6).
+        01  WS-TOTAL-DISP REDEFINES WS-TOTAL-COST    PIC 9(2)V99.
         01  WS-DISC-PRICE         PIC 9(4).
 
         PROCEDURE DIVISION.
@@ -105,7 +106,9 @@
                     SPACE
                     'DSC ' WS-DISCOUNT
                     SPACE
-                    'TOT ' WS-TOTAL-COST
+      *              'DSC PR ' WS-DISC-PRICE
+      *              SPACE
+                    'TOT ' WS-TOTAL-DISP
                     SPACE
                     WS-ITEM-NAME DELIMITED BY SIZE
                     SPACE
@@ -140,3 +143,5 @@
                 GIVING WS-DISC-PRICE.
             MULTIPLY WS-DISC-PRICE BY WS-QUANTITY
                 GIVING WS-TOTAL-COST ROUNDED. 
+            MULTIPLY WS-PRIC-NUM BY WS-QUANTITY
+                GIVING WS-TOTAL-COST.
