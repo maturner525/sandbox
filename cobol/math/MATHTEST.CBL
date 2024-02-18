@@ -50,6 +50,9 @@
             MOVE Salary TO ConvertedSalary.
             MOVE TaxRate TO ConvertedTaxRate.
 
+            DISPLAY 'SALARY ' Salary.
+            DISPLAY 'TAXRATE ' TaxRate.
+
       *     COMPUTE TaxAmount = ConvertedSalary * ConvertedTaxRate.
             MULTIPLY ConvertedSalary BY ConvertedTaxRate 
                 GIVING TaxAmount

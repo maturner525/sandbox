@@ -52,7 +52,7 @@
             05 WS-SDETAIL         PIC X(45).
             05 WS-SKU             PIC X(16).
             05 WS-DISCOUNT        PIC X(5).
-            05 WS-PRICE           PIC X(5).
+            05 WS-PRICE           PIC X(9).
             05 WS-TRANS-ID        PIC X(40).
             05 WS-SUNIT           PIC X(4).
             05 WS-GTIN            PIC X(10).
@@ -65,10 +65,8 @@
         01 WS-CONV-DISCOUNT       PIC 9(5)V99.
         01 WS-CONV-PRICE          PIC 9(5)V99.
         01 WS-CONV-COST           PIC 9(5)V99.
-        01 WS-ORIG-PRICE          PIC 9(9)V99.
-        01 WS-TOTAL-PRICE         PIC 9(5)V99.
-        01 WS-DISP-PRICE REDEFINES WS-TOTAL-PRICE PIC $****9.99.
-    
+        01 WS-SALE-AMT            PIC 9(6)V99.
+        01 WS-TOTAL-SALE          PIC Z9.99.
 
         PROCEDURE DIVISION.
         MAIN-PROCEDURE.
@@ -94,21 +92,19 @@
             END-UNSTRING.
             PERFORM PROCESS-PROCEDURE.
             MOVE SPACES TO WS-TMP-DATA.
-            STRING  WS-DISCOUNT
-                    SPACE
-                    WS-SDATE DELIMITED BY SIZE
+            STRING  WS-SDATE DELIMITED BY SIZE
                     SPACE
                     WS-GTIN DELIMITED BY SIZE
                     SPACE
                     WS-SKU DELIMITED BY SIZE
                     SPACE
-                    'QTY ' WS-QUANTITY
+                    WS-QUANTITY
                     SPACE
-                    'PRC ' WS-CONV-PRICE
+                    WS-PRICE
                     SPACE
-                    'DSC ' WS-CONV-DISCOUNT
+                    WS-DISCOUNT
                     SPACE
-                    'ORG ' WS-DISP-PRICE
+                    WS-TOTAL-SALE
                     SPACE
                     WS-ITEM-NAME DELIMITED BY SIZE
                     SPACE
@@ -134,9 +130,13 @@
             MOVE WS-PRICE TO WS-CONV-PRICE.
             
             ADD WS-CONV-DISCOUNT TO WS-CONV-PRICE
-                GIVING WS-ORIG-PRICE.
-            MULTIPLY WS-ORIG-PRICE BY WS-QUANTITY
-                GIVING WS-TOTAL-PRICE.
+                GIVING WS-SALE-AMT.
+            MULTIPLY WS-QUANTITY BY WS-SALE-AMT
+                GIVING WS-SALE-AMT.
+
+            MOVE WS-SALE-AMT TO WS-TOTAL-SALE.
+      
+       
 
 
       
