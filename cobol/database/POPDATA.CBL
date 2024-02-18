@@ -48,25 +48,27 @@
             05 WS-STIME           PIC X(10).
             05 WS-CATEGORY        PIC X(35).
             05 WS-ITEM-NAME       PIC X(30).
-            05 WS-QUANTITY        PIC 9(3).
+            05 WS-QUANTITY        PIC 9(2).
             05 WS-SDETAIL         PIC X(45).
             05 WS-SKU             PIC X(16).
             05 WS-DISCOUNT        PIC X(5).
-            05 WS-DISC-NUM REDEFINES WS-DISCOUNT PIC 9(2)V99.
             05 WS-PRICE           PIC X(5).
-            05 WS-PRIC-NUM REDEFINES WS-PRICE PIC 9(2)V99.
             05 WS-TRANS-ID        PIC X(40).
             05 WS-SUNIT           PIC X(4).
             05 WS-GTIN            PIC X(10).
-            05 WS-COST            PIC $*9.99. 
+            05 WS-COST            PIC X(5).
 
  
         01  WS-SQL-FIELDS-STR.
             05 FS                 PIC X(1) VALUE ','.
 
-        01  WS-TOTAL-COST         PIC X(6).
-        01  WS-TOTAL-DISP REDEFINES WS-TOTAL-COST    PIC 9(2)V99.
-        01  WS-DISC-PRICE         PIC 9(4).
+        01 WS-CONV-DISCOUNT       PIC 9(5)V99.
+        01 WS-CONV-PRICE          PIC 9(5)V99.
+        01 WS-CONV-COST           PIC 9(5)V99.
+        01 WS-ORIG-PRICE          PIC 9(9)V99.
+        01 WS-TOTAL-PRICE         PIC 9(5)V99.
+        01 WS-DISP-PRICE REDEFINES WS-TOTAL-PRICE PIC $****9.99.
+    
 
         PROCEDURE DIVISION.
         MAIN-PROCEDURE.
@@ -102,13 +104,11 @@
                     SPACE
                     'QTY ' WS-QUANTITY
                     SPACE
-                    'PRC ' WS-PRICE
+                    'PRC ' WS-CONV-PRICE
                     SPACE
-                    'DSC ' WS-DISCOUNT
+                    'DSC ' WS-CONV-DISCOUNT
                     SPACE
-      *              'DSC PR ' WS-DISC-PRICE
-      *              SPACE
-                    'TOT ' WS-TOTAL-DISP
+                    'ORG ' WS-DISP-PRICE
                     SPACE
                     WS-ITEM-NAME DELIMITED BY SIZE
                     SPACE
@@ -130,18 +130,13 @@
             DISPLAY WS-TMP-DATA.
 
         PROCESS-PROCEDURE.
-      *      DIVIDE WS-PRICE BY 100 
-      *          GIVING WS-PRICE.
-      *      DIVIDE WS-DISCOUNT BY 100 
-      *          GIVING WS-DISCOUNT.
-      *      SUBTRACT WS-DISCOUNT FROM WS-PRICE 
-      *          GIVING WS-DISC-PRICE.
-      *      MULTIPLY WS-DISC-PRICE BY WS-QUANTITY 
-      *          GIVING WS-TOTAL-COST ROUNDED.
+            MOVE WS-DISCOUNT TO WS-CONV-DISCOUNT.
+            MOVE WS-PRICE TO WS-CONV-PRICE.
             
-            SUBTRACT WS-DISC-NUM FROM WS-PRIC-NUM
-                GIVING WS-DISC-PRICE.
-            MULTIPLY WS-DISC-PRICE BY WS-QUANTITY
-                GIVING WS-TOTAL-COST ROUNDED. 
-            MULTIPLY WS-PRIC-NUM BY WS-QUANTITY
-                GIVING WS-TOTAL-COST.
+            ADD WS-CONV-DISCOUNT TO WS-CONV-PRICE
+                GIVING WS-ORIG-PRICE.
+            MULTIPLY WS-ORIG-PRICE BY WS-QUANTITY
+                GIVING WS-TOTAL-PRICE.
+
+
+      
