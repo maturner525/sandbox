@@ -52,7 +52,9 @@
             DISPLAY SPACE.
             MOVE Salary TO ConvertedSalary.
             MOVE TaxRate TO ConvertedTaxRate.
-            COMPUTE TaxAmount = ConvertedSalary * ConvertedTaxRate.
+      *     COMPUTE TaxAmount = ConvertedSalary * ConvertedTaxRate.
+            MULTIPLY ConvertedSalary BY ConvertedTaxRate 
+                GIVING TaxAmount.
 
             DISPLAY Employee SPACE 
                 ConvertedSalary SPACE 
