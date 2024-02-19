@@ -12,9 +12,20 @@
 
         INPUT-OUTPUT SECTION.
         FILE-CONTROL.
+<<<<<<< HEAD
+            SELECT INPUT-FILE 
+            ASSIGN TO './data.nosp'
+=======
             SELECT INPUT-FILE
       *     ASSIGN TO '/home/mark/mysql/scripts/data' 
-            ASSIGN TO './data.nosp'
+            ASSIGN TO './data'
+<<<<<<< HEAD
+=======
+            ASSIGN TO '/home/mark/mysql/scripts/data'
+>>>>>>> 75ee7f8 (Initial)
+>>>>>>> 68b848b (Initial)
+=======
+>>>>>>> c9336b7 (fix directory structure)
             ORGANIZATION IS LINE SEQUENTIAL
             ACCESS MODE IS SEQUENTIAL. 
         DATA DIVISION.
@@ -41,35 +52,38 @@
         01  WS-EOF                PIC X    VALUE 'N'.
         01  WS-OFLOW              PIC X    VALUE 'N'.
 
+        01  WS-PROFIT             PIC 9(3)V99.
         01  WS-TMP-DATA           PIC X(220).
+
+        01  WS-CONVERTED-SPRICE   PIC ZZ9.99.
+        01  WS-CONVERTED-OPRICE   PIC ZZ9.99.
+        01  WS-CONVERTED-DISCOUNT PIC ZZ9.99.
+        01  WS-CONVERTED-COST     PIC ZZ9.99.
+        01  WS-CONVERTED-SALE     PIC ZZZ9.99.
+        01  WS-CONVERTED-PROFIT   PIC ZZ9.99.
+        01  WS-CONVERTED-TCOST    PIC ZZ9.99. 
 
         01  WS-SEPARATED.
             05 WS-SDATE           PIC X(10).           
             05 WS-STIME           PIC X(10).
             05 WS-CATEGORY        PIC X(35).
             05 WS-ITEM-NAME       PIC X(30).
-            05 WS-QUANTITY        PIC 9(2).
+            05 WS-QUANTITY        PIC 999.
             05 WS-SDETAIL         PIC X(45).
             05 WS-SKU             PIC X(16).
-            05 WS-DISCOUNT        PIC X(5).
-            05 WS-PRICE           PIC X(9).
+            05 WS-DISCOUNT        PIC 9(2)V99.
+            05 WS-PRICE           PIC 9(2)V99.
             05 WS-TRANS-ID        PIC X(40).
             05 WS-SUNIT           PIC X(4).
             05 WS-GTIN            PIC X(10).
-            05 WS-COST            PIC X(5).
+            05 WS-COST            PIC 99V99.
 
- 
         01  WS-SQL-FIELDS-STR.
             05 FS                 PIC X(1) VALUE ','.
 
-        01 WS-CONV-DISCOUNT       PIC 9(5)V99.
-        01 WS-CONV-PRICE          PIC 9(5)V99.
-        01 WS-CONV-COST           PIC 9(5)V99.
-        01 WS-ORIG-PRICE          PIC 9(6)V99.
-
-      * SALE AMOUNT NUMERIC ONLY 
-        01 WS-ORIG-PR               PIC ZZ9.99.
-        01 WS-TOTAL-SALE            PIC ZZ9.99.
+        01  WS-TOTAL-COST         PIC 9(3)V99.
+        01  WS-TOTAL-SALE         PIC 9(3)V99.
+        01  WS-ORIG-PRICE         PIC 9(2)V99.
 
         PROCEDURE DIVISION.
         MAIN-PROCEDURE.
@@ -93,28 +107,53 @@
                     WS-TRANS-ID WS-SUNIT WS-GTIN WS-COST
                     ON OVERFLOW MOVE 'Y' TO WS-OFLOW
             END-UNSTRING.
+<<<<<<< HEAD
             PERFORM PROCESS-PROCEDURE.
             MOVE SPACES TO WS-TMP-DATA.
-            STRING  WS-SDATE DELIMITED BY SIZE
+            STRING  WS-DISCOUNT
+=======
+            MOVE SPACES TO TMP-DATA.
+            STRING  QUANTITY
+>>>>>>> 68b848b (Initial)
                     SPACE
+                    WS-SDATE DELIMITED BY SIZE
+                    SPACE
+<<<<<<< HEAD
                     WS-GTIN DELIMITED BY SIZE
                     SPACE
                     WS-SKU DELIMITED BY SIZE
                     SPACE
-                    WS-QUANTITY
+                    'PRC ' WS-CONVERTED-SPRICE
                     SPACE
-                    WS-PRICE
+                    'DSC ' WS-CONVERTED-DISCOUNT
                     SPACE
-                    WS-DISCOUNT
+                    'OPR ' WS-CONVERTED-OPRICE
+                    SPACE 
+                    'QTY ' WS-QUANTITY
                     SPACE
-                    WS-ORIG-PR
+                    'TOT ' WS-CONVERTED-SALE
                     SPACE
-                    WS-TOTAL-SALE
+                    'CST ' WS-CONVERTED-COST
+                    SPACE 
+                    'PFT ' WS-CONVERTED-PROFIT
                     SPACE
                     WS-ITEM-NAME DELIMITED BY SIZE
                     SPACE
                     WS-SDETAIL DELIMITED BY SIZE
                     INTO WS-TMP-DATA
+=======
+                    SKU  DELIMITED BY " "
+                    INTO        TMP-DATA
+<<<<<<< HEAD
+=======
+            STRING QUANTITY DELIMITED BY " "
+                        "," DELIMITED BY " " 
+                    SDETAIL DELIMITED BY " "
+                        "," DELIMITED BY " "
+                       SKU  DELIMITED BY " "
+                INTO        TMP-DATA
+>>>>>>> 75ee7f8 (Initial)
+>>>>>>> 68b848b (Initial)
             END-STRING.
 
             IF WS-OFLOW = 'N'
@@ -125,32 +164,53 @@
                 CLOSE INPUT-FILE
                 STOP RUN
             END-IF.
+=======
+            END-STRING.
+
+             DISPLAY 'DATA = 'TMP-DATA.
+      *     DISPLAY INPUT-RECORD.
+      *     DISPLAY SEPARATED.
+>>>>>>> c9336b7 (fix directory structure)
 
         DISPLAY-PROCEDURE.
             MOVE 'N' TO WS-OFLOW.
             DISPLAY WS-TMP-DATA.
 
         PROCESS-PROCEDURE.
-            MOVE WS-DISCOUNT TO WS-CONV-DISCOUNT.
-            MOVE WS-PRICE TO WS-CONV-PRICE.
+      *  WS-PRICE IS TOTAL SALE OF ALL ITEMS MINUS DISCOUNT
 
-      * CALCULATE ORIGINAL PRICE BEFORE DISCOUNT          
-            ADD WS-CONV-DISCOUNT TO WS-CONV-PRICE
+      *  GET PROFIT GIVEN DISCOUNT AND TOTAL AMOUNT SOLD     
+        IF WS-GTIN = '1XX'
+            DISPLAY 'PRICE: ' WS-PRICE
+            DISPLAY 'TOTAL COST: ' WS-TOTAL-COST
+            MULTIPLY WS-COST BY 2
+                GIVING WS-COST
+        END-IF 
+
+            MULTIPLY WS-COST BY WS-QUANTITY
+                GIVING WS-TOTAL-COST.
+            SUBTRACT WS-TOTAL-COST FROM WS-PRICE
+                GIVING WS-PROFIT.
+
+      *  GET BASE PRICE OF ITEM 
+            IF WS-QUANTITY > 0
+                DIVIDE WS-PRICE BY WS-QUANTITY
+                    GIVING WS-PRICE
+            END-IF
+
+            ADD WS-DISCOUNT TO WS-PRICE
                 GIVING WS-ORIG-PRICE.
 
-            MOVE WS-ORIG-PRICE TO WS-ORIG-PR.    
-
-      * CALCULATE ACTUAL SALE AMOUNT
-            MULTIPLY WS-QUANTITY BY WS-CONV-PRICE
-                GIVING WS-TOTAL-SALE.          
+      *  GET TOTAL SALE AMOUNT WITH DISCOUNT              
+            MULTIPLY WS-PRICE BY WS-QUANTITY
+                GIVING WS-TOTAL-SALE.
             
-
-      *      MOVE WS-SALE-AMT TO WS-ORIG-PRICE.
-    
+      *  MOVE ALL NUMERIC TYPES INTO PRINTABLE DOT FORMAT      
+            MOVE WS-DISCOUNT TO WS-CONVERTED-DISCOUNT.
+            MOVE WS-PRICE TO WS-CONVERTED-SPRICE.
+            MOVE WS-ORIG-PRICE TO WS-CONVERTED-OPRICE.
+            MOVE WS-COST TO WS-CONVERTED-COST.
+            MOVE WS-TOTAL-SALE TO WS-CONVERTED-SALE.
+            MOVE WS-PROFIT TO WS-CONVERTED-PROFIT. 
 
         
-      
-       
-
-
-      
